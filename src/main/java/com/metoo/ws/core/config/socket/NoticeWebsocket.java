@@ -411,7 +411,6 @@ public class NoticeWebsocket {
     }
 
     public static void main(String[] args) {
-        System.out.println("master-update");
-        System.out.println("lv-update");
+        System.out.println("master-update-195");
     }
 }
