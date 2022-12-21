@@ -411,6 +411,6 @@ public class NoticeWebsocket {
     }
 
     public static void main(String[] args) {
-        System.out.println("master-idea-commit");
+        System.out.println("idea-bch:master-idea-commit");
     }
 }
