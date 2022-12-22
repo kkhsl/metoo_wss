@@ -239,13 +239,13 @@ public class NoticeWebsocket {
         if (map.get("noticeType").equals("3")) {
             taskSendMessageByUserId(this.sid, getItemLastValue(map.get("params")));
         }
-        if (map.get("noticeType").equals("4")) {//mac  DT
+        if (map.get("noticeType").equals("4")) {
             taskSendMessageByUserId(this.sid, getMacDT(map.get("params")));
         }
-        if (map.get("noticeType").equals("5")) {//mac  DT
+        if (map.get("noticeType").equals("5")) {
             taskSendMessageByUserId(this.sid, interfaceEvent(map.get("params").toString()));
         }
-        if (map.get("noticeType").equals("6")) {//mac  DT
+        if (map.get("noticeType").equals("6")) {
             taskSendMessageByUserId(this.sid, getProblem(map.get("params")));
         }
         // 返回数据给当前用户
@@ -412,6 +412,7 @@ public class NoticeWebsocket {
 
     public static void main(String[] args) {
         System.out.println("idea-bch:master-idea-commit");
-        System.out.println("master:merge");
+        System.out.println("master:测试主分支合并后，分支merge是否提示冲突");
     }
+
 }
