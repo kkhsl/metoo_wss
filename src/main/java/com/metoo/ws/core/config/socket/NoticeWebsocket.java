@@ -412,7 +412,7 @@ public class NoticeWebsocket {
 
     public static void main(String[] args) {
         System.out.println("idea-bch:master-idea-commit");
-        System.out.println("idea-bch:测试合并冲突");
+        System.out.println("idea-bch:测试合并冲突1");
     }
 
 }
