@@ -413,6 +413,7 @@ public class NoticeWebsocket {
     public static void main(String[] args) {
         System.out.println("idea-bch:master-idea-commit");
         System.out.println("master:测试合并分支，冲突解决1");
+        System.out.println("master-link:测试远程仓库合并");
     }
 
 }
