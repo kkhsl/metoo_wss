@@ -1,16 +1,13 @@
 package com.metoo.ws.core.api.service.impl;
 
-import com.metoo.ws.core.api.service.IUserService;
+import com.metoo.ws.core.api.service.WUserService;
 import com.metoo.ws.core.config.http.RestTemplateUtil;
 import com.metoo.ws.core.config.socket.NoticeWebsocketResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
-public class UserServiceImpl implements IUserService {
+public class WUserServiceImpl implements WUserService {
 
     @Autowired
     private RestTemplateUtil restTemplateUtil;

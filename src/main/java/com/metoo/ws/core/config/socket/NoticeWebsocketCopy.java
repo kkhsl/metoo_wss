@@ -1,4 +1,4 @@
-package com.metoo.ws.core.config.socket;//package com.metoo.nspm.core.config.socket;
+//package com.metoo.ws.core.config.socket;//package com.metoo.nspm.core.config.socket;
 //
 ///**
 // * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
@@ -16,6 +16,7 @@ package com.metoo.ws.core.config.socket;//package com.metoo.nspm.core.config.soc
 //import com.metoo.nspm.Result.nspm.Group;
 //import com.metoo.nspm.Result.nspm.NetworkElement;
 //import com.metoo.nspm.Result.zabbix.Interface;
+//import com.metoo.ws.core.api.service.*;
 //import lombok.extern.slf4j.Slf4j;
 //import org.apache.commons.lang3.StringUtils;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +64,33 @@ package com.metoo.ws.core.config.socket;//package com.metoo.nspm.core.config.soc
 //
 //    private String userId;
 //
-//
-//
-//    private static IGroupService groupService;
-//    private static GroupTools groupTools;
 //    private static INetworkElementService networkElementService;
-//    private static InterfaceService interfaceService;
+//    private static WUserService userService;
+//    private static IZabbixService zabbixService;
+//    private static ITopologyService topologyService;
+//    private static IProblemService problemService;
 //
+//    @Autowired
+//    public void setNetworkElementService(INetworkElementService networkElementService) {
+//        NoticeEndpoint.networkElementService = networkElementService;
+//    }
+//    @Autowired
+//    public void setProblemService(IProblemService problemService){
+//        NoticeEndpoint.problemService = problemService;
+//    }
+//
+//    @Autowired
+//    public void setUserService(WUserService userService){
+//        NoticeEndpoint.userService = userService;
+//    }
+//    @Autowired
+//    public void setZabbixService(IZabbixService zabbixService){
+//        NoticeEndpoint.zabbixService = zabbixService;
+//    }
+//    @Autowired
+//    public void setTopologyService(ITopologyService topologyService){
+//        NoticeEndpoint.topologyService = topologyService;
+//    }
 //    @Autowired
 //    public void setGroupService(IGroupService groupService) {
 //        NoticeWebsocketCopy.groupService = groupService;

@@ -1,4 +1,5 @@
-package com.metoo.ws.core.entity;
+package com.metoo.ws.core.vo;
+
 
 import java.io.Serializable;
 

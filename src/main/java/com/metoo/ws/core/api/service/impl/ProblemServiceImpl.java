@@ -18,4 +18,18 @@ public class ProblemServiceImpl implements IProblemService {
         NoticeWebsocketResp result = restTemplateUtil.getObjByStr(url, params);
         return result;
     }
+
+    @Override
+    public NoticeWebsocketResp getProblemCpu(String params) {
+        String url = "/websocket/api/problem/interface/event";
+        NoticeWebsocketResp result = restTemplateUtil.getObjByStr(url, params);
+        return result;
+    }
+
+    @Override
+    public NoticeWebsocketResp getProblemLimit(String params) {
+        String url = "/websocket/api/problem/all";
+        NoticeWebsocketResp result = restTemplateUtil.getObjByStr(url, params);
+        return result;
+    }
 }

@@ -1,6 +1,6 @@
 package com.metoo.ws.core.config.utils;
 
-import com.metoo.ws.core.entity.Result;
+import com.metoo.ws.core.vo.Result;
 
 import java.util.HashMap;
 import java.util.Map;

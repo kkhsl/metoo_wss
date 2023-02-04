@@ -49,7 +49,9 @@ public class RestTemplateUtil {
                 NoticeWebsocketResp resp = JSONObject.parseObject(result.getBody(), NoticeWebsocketResp.class);
                 return resp;
             }else{
-                return null;
+                NoticeWebsocketResp resp = new NoticeWebsocketResp();
+                resp.setNoticeStatus(-1);
+                return resp;
             }
         } catch (RestClientException e) {
             e.printStackTrace();

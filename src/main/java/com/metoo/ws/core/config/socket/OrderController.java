@@ -16,7 +16,7 @@ public class OrderController {
 
     @GetMapping("/test")
     public Object test() {
-        NoticeWebsocket.sendMessage("测试推送消息");
+//        NoticeEndpoint.sendMessage("测试推送消息");
 //        NoticeWebsocket.sendMessageByUserId("1", "测试单独推送");
         return ResponseUtil.ok();
     }

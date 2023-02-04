@@ -19,14 +19,25 @@ public class NetworkElementServiceImpl implements INetworkElementService {
         return result;
     }
 
+//    @Override
+//    public NoticeWebsocketResp getSnmpSatus(String params) {
+//        String url = "/websocket/api/network/snmp/status";
+//        StringBuffer sb = new StringBuffer(url);
+//        sb.append("?ips=" + params);
+//        NoticeWebsocketResp result = restTemplateUtil.get(sb.toString());
+//        return result;
+//    }
+
     @Override
     public NoticeWebsocketResp getSnmpSatus(String params) {
         String url = "/websocket/api/network/snmp/status";
-        StringBuffer sb = new StringBuffer(url);
-        sb.append("?ips=" + params);
-        NoticeWebsocketResp result = restTemplateUtil.get(sb.toString());
+        NoticeWebsocketResp result = restTemplateUtil.getObjByStr(url, params);
+//        StringBuffer sb = new StringBuffer(url);
+//        sb.append("?ips=" + params);
+//        NoticeWebsocketResp result = restTemplateUtil.get(sb.toString());
         return result;
     }
+
 
     @Override
     public NoticeWebsocketResp interfaceEvent(String params) {

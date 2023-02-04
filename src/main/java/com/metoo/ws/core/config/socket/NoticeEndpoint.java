@@ -8,13 +8,11 @@ package com.metoo.ws.core.config.socket;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.metoo.ws.core.api.service.*;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -44,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/notice/nmap/{userId}")
 @Component
 @Slf4j
-public class NoticeWebsocket {
+public class NoticeEndpoint {
 
     //记录连接的客户端
     public static Map<String, Session> clients = new ConcurrentHashMap<>();
@@ -69,29 +67,30 @@ public class NoticeWebsocket {
      */
 
     private static INetworkElementService networkElementService;
-    private static IUserService userService;
+    private static WUserService userService;
     private static IZabbixService zabbixService;
     private static ITopologyService topologyService;
     private static IProblemService problemService;
     @Autowired
     public void setNetworkElementService(INetworkElementService networkElementService) {
-        NoticeWebsocket.networkElementService = networkElementService;
-    }
-    @Autowired
-    public void setUserService(IUserService userService){
-        NoticeWebsocket.userService = userService;
-    }
-    @Autowired
-    public void setZabbixService(IZabbixService zabbixService){
-        NoticeWebsocket.zabbixService = zabbixService;
-    }
-    @Autowired
-    public void setTopologyService(ITopologyService topologyService){
-        NoticeWebsocket.topologyService = topologyService;
+        NoticeEndpoint.networkElementService = networkElementService;
     }
     @Autowired
     public void setProblemService(IProblemService problemService){
-        NoticeWebsocket.problemService = problemService;
+        NoticeEndpoint.problemService = problemService;
+    }
+
+    @Autowired
+    public void setUserService(WUserService userService){
+        NoticeEndpoint.userService = userService;
+    }
+    @Autowired
+    public void setZabbixService(IZabbixService zabbixService){
+        NoticeEndpoint.zabbixService = zabbixService;
+    }
+    @Autowired
+    public void setTopologyService(ITopologyService topologyService){
+        NoticeEndpoint.topologyService = topologyService;
     }
     /**
      * 连接成功后调用的方法
@@ -102,7 +101,7 @@ public class NoticeWebsocket {
     public void onOpen(Session session, @PathParam("userId") String userId) {
         // 方法一：前端发送用户信息（明文）
         // 方法二：做分布式登录 SSO。部署到同一个服务器，认证授权使用同一个项目
-        NoticeWebsocketResp resp = this.userService.selectObjById(1L);
+        NoticeWebsocketResp resp = this.userService.selectObjById(Long.parseLong(userId));
         if(true){
             this.sid = UUID.randomUUID().toString();
             this.userId = userId;
@@ -147,7 +146,7 @@ public class NoticeWebsocket {
      * @return
      */
     public static boolean isServerClose() {
-        if (NoticeWebsocket.clients.values().size() == 0) {
+        if (NoticeEndpoint.clients.values().size() == 0) {
             log.info("已断开");
             return true;
         }else {
@@ -172,7 +171,7 @@ public class NoticeWebsocket {
      */
     public static void sendMessage(NoticeWebsocketResp noticeWebsocketResp){
         String message = JSONObject.toJSONString(noticeWebsocketResp);
-        for (Session session1 : NoticeWebsocket.clients.values()) {
+        for (Session session1 : NoticeEndpoint.clients.values()) {
             try {
                 session1.getBasicRemote().sendText(message);
             } catch (IOException e) {
@@ -211,7 +210,7 @@ public class NoticeWebsocket {
      * @param message
      * @param session
      */
-    @OnMessage
+    @OnMessage(maxMessageSize = 1048576)
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口 " + this.userId + " 的信息:" + message);
 
@@ -234,7 +233,7 @@ public class NoticeWebsocket {
             taskSendMessageByUserId(this.sid, getNeAvailable(message));
         }
         if (map.get("noticeType").equals("2")) {
-            taskSendMessageByUserId(this.sid, snmpStatus(map.get("params").toString()));
+            taskSendMessageByUserId(this.sid, snmpStatus(map.get("params")));
         }
         if (map.get("noticeType").equals("3")) {
             taskSendMessageByUserId(this.sid, getItemLastValue(map.get("params")));
@@ -247,6 +246,10 @@ public class NoticeWebsocket {
         }
         if (map.get("noticeType").equals("6")) {
             taskSendMessageByUserId(this.sid, getProblem(map.get("params")));
+        } if (map.get("noticeType").equals("7")) {
+            taskSendMessageByUserId(this.sid, getProblemCpu(map.get("params")));
+        }if (map.get("noticeType").equals("8")) {
+            taskSendMessageByUserId(this.sid, getProblemLimit(map.get("params")));
         }
         // 返回数据给当前用户
 //        taskSendMessageByUserId(this.sid, getNeAvailable(message));
@@ -296,15 +299,8 @@ public class NoticeWebsocket {
     }
 
     // snmp状态
-    public NoticeWebsocketResp snmpStatus(String params){
-        Map map = (Map) JSON.parse(params);
-        NoticeWebsocketResp resp = null;
-        if(map.get("ips") != null) {
-            resp = this.networkElementService.getSnmpSatus(map.get("ips").toString());
-        }else{
-            resp = new NoticeWebsocketResp();
-            resp.setNoticeStatus(-1);
-        }
+    public NoticeWebsocketResp snmpStatus(Object params){
+        NoticeWebsocketResp resp = networkElementService.getSnmpSatus(JSONObject.toJSONString(params));
         return resp;
     }
 
@@ -325,6 +321,14 @@ public class NoticeWebsocket {
     }
     public NoticeWebsocketResp getProblem(Object params){
         NoticeWebsocketResp resp = problemService.getProblem(JSONObject.toJSONString(params));
+        return resp;
+    }
+    public NoticeWebsocketResp getProblemCpu(Object params){
+        NoticeWebsocketResp resp = problemService.getProblemCpu(JSONObject.toJSONString(params));
+        return resp;
+    }
+    public NoticeWebsocketResp getProblemLimit(Object params){
+        NoticeWebsocketResp resp = problemService.getProblemLimit(JSONObject.toJSONString(params));
         return resp;
     }
 
@@ -378,16 +382,48 @@ public class NoticeWebsocket {
                     taskSendMessageByUserId(key, getNeAvailable(JSON.toJSONString(param)));
                 }if(type.equals("2")){
                     Map param = JSONObject.parseObject(params.get(type), Map.class);
-                    taskSendMessageByUserId(key, snmpStatus(param.get("params").toString()));
-                }else if(type.equals("3")){
-                    Map param = JSONObject.parseObject(params.get(type), Map.class);
-                        taskSendMessageByUserId(key, getItemLastValue(param.get("params")));
+                    taskSendMessageByUserId(key, snmpStatus(param.get("params")));
                 }else if(type.equals("5")){
                     Map param = JSONObject.parseObject(params.get(type), Map.class);
                     taskSendMessageByUserId(key, interfaceEvent(param.get("params").toString()));
-                }else if(type.equals("6")){
+                }else if(type.equals("7")){
+                    Map param = JSONObject.parseObject(params.get(type), Map.class);
+                    taskSendMessageByUserId(key, getProblemCpu(param.get("params")));
+                }else if(type.equals("8")){
+                    Map param = JSONObject.parseObject(params.get(type), Map.class);
+                    taskSendMessageByUserId(key, getProblemLimit(param.get("params")));
+                }else{
+                    continue ;// outCycle
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "*/10 * * * * ?")
+    public void topologyProblem() throws InterruptedException {
+        outCycle:for (String key : taskParams.keySet()){// 校验用户是否已断开，或断开时删除该用户定时任务信息
+            Map<String, String> params = taskParams.get(key);
+            for(String type : params.keySet()){
+                if(type.equals("3")){
+                    Thread.sleep(10000);
+                    Map param = JSONObject.parseObject(params.get(type), Map.class);
+                    taskSendMessageByUserId(key, getItemLastValue(param.get("params")));
+                }else{
+                    continue ;// outCycle
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "*/10 * * * * ?")
+    public void problem(){
+        outCycle:for (String key : taskParams.keySet()){// 校验用户是否已断开，或断开时删除该用户定时任务信息
+            Map<String, String> params = taskParams.get(key);
+            for(String type : params.keySet()){
+                if(type.equals("6")){
                     Map param = JSONObject.parseObject(params.get(type), Map.class);
                     taskSendMessageByUserId(key, getProblem(param.get("params")));
+                    break ;
                 }else {
                     continue ;// outCycle
                 }
@@ -408,14 +444,6 @@ public class NoticeWebsocket {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println("idea-bch:master-idea-commit");
-        System.out.println("master:测试合并分支，冲突解决1");
-        System.out.println("测试ssh推送:失败！！！");
-        System.out.println("master:测试merge远程仓库");
-        System.out.println("master-link:测试远程仓库合并");
     }
 
 }

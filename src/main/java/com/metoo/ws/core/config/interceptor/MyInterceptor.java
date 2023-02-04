@@ -1,23 +1,16 @@
 package com.metoo.ws.core.config.interceptor;
 
-import com.metoo.ws.core.api.service.IUserService;
-import com.metoo.ws.core.config.socket.NoticeWebsocketResp;
+import com.metoo.ws.core.api.service.WUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
-import org.springframework.messaging.handler.HandlerMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class MyInterceptor implements HandlerInterceptor {
 
 
     @Autowired
-    private static IUserService userService;
+    private static WUserService userService;
 
     /**
      * handler 对应@RequestMapping对应的controller对象
