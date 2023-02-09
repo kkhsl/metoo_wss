@@ -46,4 +46,10 @@ public class NetworkElementServiceImpl implements INetworkElementService {
         return result;
     }
 
+    @Override
+    public NoticeWebsocketResp getNeInterfaceDT(String params) {
+        String url = "/websocket/api/network/ne/interface/all";
+        NoticeWebsocketResp result = restTemplateUtil.getObjByStr(url, params);
+        return result;
+    }
 }

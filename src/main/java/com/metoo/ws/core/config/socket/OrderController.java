@@ -1,6 +1,5 @@
 package com.metoo.ws.core.config.socket;
 
-import com.metoo.ws.core.config.utils.ResponseUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,7 @@ public class OrderController {
     public Object test() {
 //        NoticeEndpoint.sendMessage("测试推送消息");
 //        NoticeWebsocket.sendMessageByUserId("1", "测试单独推送");
-        return ResponseUtil.ok();
+        return null;
     }
 
     @GetMapping("/request")
