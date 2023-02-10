@@ -250,6 +250,8 @@ public class NoticeEndpoint {
             taskSendMessageByUserId(this.sid, getProblemCpu(map.get("params")));
         }if (map.get("noticeType").equals("8")) {
             taskSendMessageByUserId(this.sid, getProblemLimit(map.get("params")));
+        }if (map.get("noticeType").equals("9")) {
+            taskSendMessageByUserId(this.sid, getNeInterfaceDT(map.get("params")));
         }
         // 返回数据给当前用户
 //        taskSendMessageByUserId(this.sid, getNeAvailable(message));
@@ -331,7 +333,10 @@ public class NoticeEndpoint {
         NoticeWebsocketResp resp = problemService.getProblemLimit(JSONObject.toJSONString(params));
         return resp;
     }
-
+    public NoticeWebsocketResp getNeInterfaceDT(Object params){
+        NoticeWebsocketResp resp = networkElementService.getNeInterfaceDT(JSONObject.toJSONString(params));
+        return resp;
+    }
     /**
      * 发生错误时的回调函数
      * @param error
@@ -392,6 +397,9 @@ public class NoticeEndpoint {
                 }else if(type.equals("8")){
                     Map param = JSONObject.parseObject(params.get(type), Map.class);
                     taskSendMessageByUserId(key, getProblemLimit(param.get("params")));
+                }else if(type.equals("9")){
+                    Map param = JSONObject.parseObject(params.get(type), Map.class);
+                    taskSendMessageByUserId(key, getNeInterfaceDT(param.get("params")));
                 }else{
                     continue ;// outCycle
                 }

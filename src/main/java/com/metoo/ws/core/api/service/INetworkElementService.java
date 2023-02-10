@@ -12,4 +12,8 @@ public interface INetworkElementService {
     NoticeWebsocketResp getSnmpSatus(String params);
 
     NoticeWebsocketResp interfaceEvent(String params);
+
+    NoticeWebsocketResp getNeInterfaceDT(String params);
+
+
 }

@@ -9,6 +9,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 @ServletComponentScan(basePackages ={ "com.metoo.ws"})
 @EnableScheduling // 开启定时任务（启动类增加该注解，使项目启动后执行定时任务）
